@@ -18236,6 +18236,31 @@ ZmZmZmZm1hQOTJmZmZmZmZmZWVM4MGVmZmZmZmZmZk3x/wH7LcHfqgzL6gAAAABJRU5ErkJggg==
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer:</strong></p>
+<p>What decaying function was used for epsilon (the exploration factor)?</p>
+
+<pre><code>- The decaying function I have used is 
+
+</code></pre>
+$$ \epsilon = e^{-at}$$<p>Approximately how many training trials were needed for your agent before begining testing?</p>
+<p>The tolerence is 0.01 and a is 0.01, so Inorder to find out the number of training trials</p>
+$$ e^{-at} = tolerence $$$$ e^{-(0.01)t} = 0.01 $$$$ -0.01*t = \ln{ 0.01 } $$$$ -0.01*t = -4.60 $$$$ t = -4.60*-100 $$$$ t ~= 460 $$<p>What epsilon-tolerance and alpha (learning rate) did you use? Why did you use them?</p>
+
+<pre><code>- The epsilon-tolerance is set to 0.01 and alpha(learning rate) was set to 0.3. These values were found to be optimal for the learning agent to reach up to a reasonable performance(A+ for safety and reliability).
+
+</code></pre>
+<p>How much improvement was made with this Q-Learner when compared to the default Q-Learner from the previous section?</p>
+
+<pre><code>- For the default Q-Learner safety rating was B and reliability rating was F. Both of these safety and reliability went up to A+ for the improved Q-Learner
+
+</code></pre>
+<p>Would you say that the Q-Learner results show that your driving agent successfully learned an appropriate policy?</p>
+
+<pre><code>- Sure
+
+</code></pre>
+<p>Are you satisfied with the safety and reliability ratings of the Smartcab?</p>
+
+<pre><code>- Yes</code></pre>
 
 </div>
 </div>
@@ -18266,6 +18291,17 @@ ZmZmZmZm1hQOTJmZmZmZmZmZWVM4MGVmZmZmZmZmZk3x/wH7LcHfqgzL6gAAAABJRU5ErkJggg==
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer:</strong></p>
+<p>Provide a few examples (using the states you've defined) of what an optimal policy for this problem would look like.</p>
+<p>The features I used for the state is (waypoint, light, left, right, oncoming)</p>
+<p>Here is a case ('forward', 'green', 'left', 'forward', None). Waypoiint tells the direction the cab has to travel is forward. The signal is green and no oncoming traffic. Here the optimal action would be to go forward.</p>
+<p>Provide an example of a state and all state-action rewards recorded, and explain why it is the correct policy.</p>
+<p>I am taking the second last example from the <code>'sim_improved-learning.txt'</code> text file</p>
+<p>('forward', 'green', 'forward', None, 'left')</p>
+<p>-- forward : 1.70</p>
+<p>-- right : 0.45</p>
+<p>-- None : 0.00</p>
+<p>-- left : 0.53</p>
+<p>Here the cab has to go forward, signal is green and oncoming traffic from left, no traffic from right. The optimum action would be to go forward and the maximum reward as per the Q-table is for the action 'forward'</p>
 
 </div>
 </div>
@@ -18297,6 +18333,8 @@ ZmZmZmZm1hQOTJmZmZmZmZmZWVM4MGVmZmZmZmZmZk3x/wH7LcHfqgzL6gAAAABJRU5ErkJggg==
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>Answer:</strong></p>
+<p>First of all, if we include future rewards in the calculation which would make the cab concentrate on later rewards and the algorithm may never converge to an optimal policy.</p>
+<p>In the second case, since the cab has to pass each intersection one by one, it only make sense to pass first intersection to last intersection in order to safely reach the goal. Concentrating on how to pass last signal point is worthless while the cab is presently waiting at its very first traffic intersection. So in short the nature of the problem itself make future rewards invalid in this Q-Learning algorithm.</p>
 
 </div>
 </div>
