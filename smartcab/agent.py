@@ -42,7 +42,7 @@ class LearningAgent(Agent):
 
         #self.epsilon = self.epsilon -0.05
         
-        self.a = 0.9
+        self.a = 0.01
         self.t = self.t+1
 
         if testing:
@@ -95,10 +95,11 @@ class LearningAgent(Agent):
         #Q = {'left':10.0, 'right':11.0, 'forward':-5.0, None :0.0 }
         #max(Q)---> right
 
-        row = self.Q[state]
-        print row
-        maxkey = max(row) 
-        maxQ = self.Q[state][maxkey]
+        #row = self.Q[state]
+        #print row
+        #maxkey = max(row) 
+        #maxQ = self.Q[state][maxkey]
+        maxQ = max(self.Q[state][action] for action in self.valid_actions)
 
         return maxQ 
 
@@ -133,7 +134,7 @@ class LearningAgent(Agent):
         # Set the agent state and default action
         self.state = state
         self.next_waypoint = self.planner.next_waypoint()
-        action = None
+        #action = None
 
         ########### 
         ## TO DO ##
@@ -148,7 +149,10 @@ class LearningAgent(Agent):
             if self.epsilon > random.random():
                 action = random.choice(self.valid_actions)
             else:
-                action = max(self.Q[state])
+                #action = max(self.Q[state])
+                #action = self.get_maxQ(state)
+                maxQ = self.get_maxQ(state)
+                action = random.choice([action for action in self.valid_actions if self.Q[state][action]==maxQ])
         else:
             action = random.choice(self.valid_actions)
         
@@ -178,11 +182,11 @@ class LearningAgent(Agent):
         next_oncoming = next_inputs['oncoming'] 
         next_state = (next_waypoint, next_light, next_left, next_right, next_oncoming)
         
-        #self.Q[state][action] = (1-self.alpha)*self.Q[state][action] + self.alpha*reward
+        self.Q[state][action] = (1-self.alpha)*self.Q[state][action] + self.alpha*reward
         #self.Q[state][action] = (1-self.alpha)*self.Q[state][action] + self.alpha*(reward+self.get_maxQ(next_state))
         #self.Q[state][action] = (1-self.alpha)*self.Q[state][action] + self.alpha*(reward + self.get_maxQ(next_state)- self.Q[state][action])
         #self.Q[state][action] = reward*self.alpha + (1-self.alpha)*self.Q[state][action]
-        self.Q[state][action] = (1-self.alpha)*self.Q[state][action] + self.alpha * reward
+        
 
 
         return
@@ -212,7 +216,7 @@ def run():
     #   verbose     - set to True to display additional output from the simulation
     #   num_dummies - discrete number of dummy agents in the environment, default is 100
     #   grid_size   - discrete number of intersections (columns, rows), default is (8, 6)
-    env = Environment()
+    env = Environment(verbose = True)
     
     ##############
     # Create the driving agent
@@ -235,14 +239,14 @@ def run():
     #   display      - set to False to disable the GUI if PyGame is enabled
     #   log_metrics  - set to True to log trial and simulation results to /logs
     #   optimized    - set to True to change the default log file name
-    sim = Simulator(env, update_delay = 0.0001, log_metrics =True, optimized = True)
+    sim = Simulator(env, update_delay = 0.0001, log_metrics =True, optimized = True, display = False)
     
     ##############
     # Run the simulator
     # Flags:
     #   tolerance  - epsilon tolerance before beginning testing, default is 0.05 
     #   n_test     - discrete number of testing trials to perform, default is 0
-    sim.run(n_test = 30, tolerance = 0.1)
+    sim.run(n_test = 10, tolerance = 0.01)
 
 
 if __name__ == '__main__':
