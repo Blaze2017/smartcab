@@ -99,7 +99,8 @@ class LearningAgent(Agent):
         #print row
         #maxkey = max(row) 
         #maxQ = self.Q[state][maxkey]
-        maxQ = max(self.Q[state][action] for action in self.valid_actions)
+        #maxQ = max(self.Q[state][action] for action in self.valid_actions)
+        maxQ = max(self.Q[state].values())
 
         return maxQ 
 
@@ -120,9 +121,12 @@ class LearningAgent(Agent):
         #print keyword in a
 
 
-        if self.learning:
-            if state not in self.Q:
-                self.Q[state] = {'left':0.0, 'right':0.0, 'forward':0.0, None :0.0 }
+        #if self.learning:
+        #    if state not in self.Q:
+        #        self.Q[state] = {'left':0.0, 'right':0.0, 'forward':0.0, None :0.0 }
+
+        if (self.learning) and (state not in self.Q):
+            self.Q[state] = {action: 0 for action in self.valid_actions}
 
         return
 
@@ -174,13 +178,13 @@ class LearningAgent(Agent):
         # When learning, implement the value iteration update rule
         #   Use only the learning rate 'alpha' (do not use the discount factor 'gamma')
 
-        next_waypoint = self.planner.next_waypoint()  
-        next_inputs = self.env.sense(self)           
-        next_light = next_inputs['light']
-        next_left = next_inputs['left']
-        next_right = next_inputs['right']
-        next_oncoming = next_inputs['oncoming'] 
-        next_state = (next_waypoint, next_light, next_left, next_right, next_oncoming)
+        #next_waypoint = self.planner.next_waypoint()  
+        #next_inputs = self.env.sense(self)           
+        #next_light = next_inputs['light']
+        #next_left = next_inputs['left']
+        #next_right = next_inputs['right']
+        #next_oncoming = next_inputs['oncoming'] 
+        #next_state = (next_waypoint, next_light, next_left, next_right, next_oncoming)
         
         self.Q[state][action] = (1-self.alpha)*self.Q[state][action] + self.alpha*reward
         #self.Q[state][action] = (1-self.alpha)*self.Q[state][action] + self.alpha*(reward+self.get_maxQ(next_state))
@@ -224,7 +228,9 @@ def run():
     #   learning   - set to True to force the driving agent to use Q-learning
     #    * epsilon - continuous value for the exploration factor, default is 1
     #    * alpha   - continuous value for the learning rate, default is 0.5
-    agent = env.create_agent(LearningAgent, learning = True, alpha = 0.3, epsilon = 0.9)
+    agent = env.create_agent(LearningAgent, learning = True, alpha = 0.01)
+
+    #epsilon = 0.95)
     
     ##############
     # Follow the driving agent
@@ -239,7 +245,7 @@ def run():
     #   display      - set to False to disable the GUI if PyGame is enabled
     #   log_metrics  - set to True to log trial and simulation results to /logs
     #   optimized    - set to True to change the default log file name
-    sim = Simulator(env, update_delay = 0.0001, log_metrics =True, optimized = True, display = False)
+    sim = Simulator(env, update_delay = 0.00001, log_metrics =True, optimized = True, display = False)
     
     ##############
     # Run the simulator
